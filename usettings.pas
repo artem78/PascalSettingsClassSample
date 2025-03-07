@@ -8,15 +8,13 @@ uses
   Classes, SysUtils, IniFiles;
 
 type
-  {TOnSettingChangedProc} TNotifyEvent = procedure(const AParam: String) of Object;
+  TSettingsChangeNotifyEvent = procedure(const AParam: String) of Object;
 
   { TSettings }
 
   TSettings = class
     private
-      //const MAIN_INI_SECTION = 'general';
       Ini: TIniFile;
-      //FOnChangedProc: TOnSettingChangedProc;
 
       procedure SetFormTitle(const AVal: String);
       function GetFormTitle: String;
@@ -28,19 +26,17 @@ type
       function GetChecked: Boolean;
 
       procedure SetParam(const AName: String; AVal: Variant);
-      procedure {CallOnChangedProc} DoChange(const AParam: String);
+      procedure DoChange(const AParam: String);
     public
-      OnChange: {TOnSettingChangedProc} TNotifyEvent;
+      OnChange: TSettingsChangeNotifyEvent;
 
       constructor Create;
       destructor Destroy; override;
 
-      property FormTitle: String read GetFormTitle write SetFormTitle {default ''};
-      property Num: Integer read GetNum write SetNum {default 0};
-      property FloatNum: Double read GetFloatNum write SetFloatNum {default 0.0};
-      property Checked: Boolean read GetChecked write SetChecked {default false};
-
-      //procedure Save;
+      property FormTitle: String read GetFormTitle write SetFormTitle;
+      property Num: Integer read GetNum write SetNum;
+      property FloatNum: Double read GetFloatNum write SetFloatNum;
+      property Checked: Boolean read GetChecked write SetChecked;
   end;
 
 var
@@ -54,8 +50,6 @@ const MAIN_INI_SECTION = 'general';
 
 procedure TSettings.SetFormTitle(const AVal: String);
 begin
-  //ini.WriteString(MAIN_INI_SECTION, 'FormTitle', AVal);
-  //CallOnChangedProc('FormTitle');
   SetParam('FormTitle', AVal);
 end;
 
@@ -66,8 +60,6 @@ end;
 
 procedure TSettings.SetNum(AVal: Integer);
 begin
-  //ini.WriteInteger(MAIN_INI_SECTION, 'Num', AVal);
-  //CallOnChangedProc('Num');
   SetParam('Num', AVal);
 end;
 
@@ -78,8 +70,6 @@ end;
 
 procedure TSettings.SetFloatNum(AVal: Double);
 begin
-  //ini.WriteFloat(MAIN_INI_SECTION, 'FloatNum', AVal);
-  //CallOnChangedProc('FloatNum');
   SetParam('FloatNum', AVal);
 end;
 
@@ -131,11 +121,6 @@ destructor TSettings.Destroy;
 begin
   Ini.Free;
 end;
-
-{procedure TSettings.Save;
-begin
-
-end;}
 
 initialization
   Settings := TSettings.Create;
